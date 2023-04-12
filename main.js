@@ -3,7 +3,7 @@ let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=`;
 let weatherApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?';
 let units = 'metric';
 let input = document.querySelector('#input');
-let city = document.querySelector('#city.value');
+let cityInput = document.querySelector('#city');
 let weatherForCurrentLocation = document.querySelector('#currentLocation');
 let pLocation = document.querySelector('#location p');
 
@@ -25,6 +25,7 @@ async function checkLocation(city) {
 				if (locationData == '') {
 					alert('Did not find that city. Please try again!');
 					pLocation.innerHTML = 'No Coordinates';
+					cityInput.value = '';
 				} else {
 					getLocationInfo();
 				}
@@ -162,37 +163,6 @@ async function geoFindMe() {
 	}
 }
 
-function clearInfo() {
-	document.body.innerHTML = `
-        <div class="container">
-            <div class="left"><button type="button" id="currentLocation">Show weather for current location</button>
-                <br>
-                <form id="input">
-                    <h3>Enter a city to check weather</h3>
-                    <input type="text" id="city" name="city">
-                    <br>
-                    <button type="submit" id="submit">Show Weather</button>
-                </form>
-                <div id="location">
-                    <h1>Location coordinates</h1>
-                    <p>No Coordinates</p>
-                </div>
-                <div id="weatherName">
-                    <h1>Weather</h1>
-                    <p>No City Data</p>
-                </div>
-                <div id="weather">
-                    <div id="weatherIcon"><img src="" alt=""></div>
-                    <p>No Weather Data</p>
-                </div>
-            </div>
-            <div class="right">
-                <h3>Weather Forecast</h3>
-                <div id="forecastList">
-
-                </div>
-            </div>
-        </div>
-        <script src="main.js"></script>
-    `;
+function clearInput() {
+	document.getElementById('city').reset();
 }
