@@ -95,6 +95,7 @@ async function checkWeather(lat, lon) {
 		const time = timeFormat(new Date(weatherData.list[0].dt * 1000));
 		const icon = weatherData.list[0].weather[0].icon;
 		const description = weatherData.list[0].weather[0].description;
+		const num = degToCompass(weatherData.list[0].wind.deg);
 
 		let forecastList = document.querySelector('#forecastList');
 		let weatherList = '<ul>';
@@ -108,13 +109,15 @@ async function checkWeather(lat, lon) {
 				new Date(weatherData.list[i].dt * 1000)
 			)} ${weatherData.list[i].main.temp.toFixed(
 				0
-			)} °C  ${weatherData.list[i].wind.speed.toFixed(0)} m/s </div>
+			)} °C  ${weatherData.list[i].wind.speed.toFixed(
+				0
+			)} m/s from ${degToCompass(weatherData.list[i].wind.deg)}</div>
 			  </li>`;
 		}
 		weatherList += '</ul>';
 		forecastList.innerHTML = weatherList;
 
-		const str = `${time} <br> ${description} <br> ${temp} °C ${wind} m/s `;
+		const str = `${time} <br> ${description} <br> ${temp} °C ${wind} m/s from ${num}`;
 
 		const name = `${location}`;
 
@@ -165,4 +168,27 @@ async function geoFindMe() {
 
 function clearInput() {
 	document.getElementById('city').reset();
+}
+
+function degToCompass(num) {
+	var val = Math.floor(num / 22.5 + 0.5);
+	var arr = [
+		'N',
+		'NNE',
+		'NE',
+		'ENE',
+		'E',
+		'ESE',
+		'SE',
+		'SSE',
+		'S',
+		'SSW',
+		'SW',
+		'WSW',
+		'W',
+		'WNW',
+		'NW',
+		'NNW',
+	];
+	return arr[val % 16];
 }
