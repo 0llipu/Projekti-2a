@@ -116,7 +116,7 @@ async function checkCurrentWeather(lat, lon) {
 
 		const name = `${location}`;
 
-		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="200px">`;
+		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="150px">`;
 
 		nWeather.innerHTML = name;
 
