@@ -4,10 +4,42 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <title>Weather App</title>
     </head>
     <body>
+        <div class="container">
+            <div class="left"><button type="button" id="currentLocation">Show weather for current location</button>
+                <br>
+                <form id="input">
+                    <h3>Enter a city to check weather</h3>
+                    <input type="text" id="city" name="city">
+                    <br>
+                    <button type="submit" id="submit">Show Weather</button>
+                </form>
+                <div id="location">
+                    <h1>Location coordinates</h1>
+                    <p>No Coordinates</p>
+                </div>
+                <div id="weatherName">
+                    <h1>Weather</h1>
+                    <p>No City Data</p>
+                </div>
+                <div id="weather">
+                    <div id="weatherIcon"><img src="" alt=""></div>
+                    <p>No Weather Data</p>
+                </div>
+            </div>
+            <div class="right">
+                <h3>Weather Forecast</h3>
+                <div id="forecastList">
 
-        <script src="script.js"></script>
+                </div>
+            </div>
+        </div>
+        <script src="main.js"></script>
     </body>
 </html>

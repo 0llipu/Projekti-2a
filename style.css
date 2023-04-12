@@ -1,0 +1,114 @@
+/* Resets for universal default styling, makes it easier to do own styling*/
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Open Sans', sans-serif;
+}
+
+input,
+button,
+form {
+	appearance: none;
+	border: none;
+	outline: none;
+	background: none;
+	cursor: initial;
+}
+
+body {
+	background-color: lightslategrey;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	margin-left: auto;
+	margin-right: auto;
+	width: 60%;
+	padding: 1rem;
+	min-width: 600px;
+	background: linear-gradient(to bottom right, #ccffff 0%, #0099ff 100%);
+	border-radius: 25px;
+}
+
+input,
+button {
+	border-radius: 5px;
+	background: linear-gradient(to top left, #ccffff 0%, #66ccff 100%);
+
+	padding: 0.2rem;
+	margin: 0.1rem;
+}
+
+input {
+	box-shadow: rgb(57, 57, 57) 0px 0px 1px 1px;
+}
+
+button {
+	cursor: pointer;
+	box-shadow: rgb(105, 105, 105) 1px 1px;
+}
+
+input:hover {
+	opacity: 0.5;
+}
+button:hover {
+	opacity: 0.5;
+}
+button:active {
+	opacity: 0.3;
+}
+
+.left {
+	min-width: 250px;
+}
+.left h1 {
+	font-size: 1.35rem;
+}
+.left h3 {
+	font-size: 1rem;
+}
+.left p {
+	font-size: 0.75rem;
+}
+
+.right {
+	font-size: 0.75rem;
+	min-width: 250px;
+}
+.right h3 {
+	font-size: 1rem;
+	margin-left: 1rem;
+}
+
+.right ul li {
+	list-style: none;
+	text-align: justify;
+}
+
+.right div {
+	display: flex;
+	align-items: center;
+}
+
+.forecastImg {
+	margin-left: 0.25rem;
+}
+
+@media only screen and (max-width: 620px) {
+	.container {
+		flex-direction: column;
+		align-items: center;
+		width: 90%;
+		min-width: 90%;
+	}
+	.left,
+	.right {
+		text-align: center;
+	}
+	.right div {
+		justify-content: center;
+	}
+}
