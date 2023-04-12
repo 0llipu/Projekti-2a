@@ -1,5 +1,5 @@
 let API_KEY = '71999687a3a8645a511abce5465479b5';
-let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?`;
+let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=`;
 let weatherApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?';
 let units = 'metric';
 let input = document.querySelector('#input');
@@ -10,10 +10,9 @@ let pLocation = document.querySelector('#location p');
 async function checkLocation(city) {
 	let locationData = {};
 	let locationRequest = new XMLHttpRequest();
-	console.log(`${locationApiUrl}q=${city}&limit=1&appid=${API_KEY}`);
 	locationRequest.open(
 		'GET',
-		`${locationApiUrl}q=${city}&limit=1&appid=${API_KEY}`
+		`${locationApiUrl}${city}&limit=1&appid=${API_KEY}`
 	);
 	locationRequest.responseType = 'text';
 
@@ -23,16 +22,20 @@ async function checkLocation(city) {
 			if (locationRequest.status === 200) {
 				pLocation.textContent = 'locating...';
 				locationData = JSON.parse(locationRequest.responseText);
-				getLocationInfo();
+				if (locationData == '') {
+					alert('Did not find that city. Please try again!');
+					pLocation.innerHTML = 'No Coordinates';
+				} else {
+					getLocationInfo();
+				}
 			} else {
-				console.log = 'error: ' + locationRequest.status;
+				console.log(locationRequest.status);
 			}
 		},
 		false
 	);
 
 	locationRequest.send();
-	console.log(locationRequest);
 
 	async function getLocationInfo() {
 		const lat = locationData[0].lat;
@@ -50,9 +53,6 @@ async function checkWeather(lat, lon) {
 	let iWeather = document.querySelector('#weatherIcon');
 	let weatherData = {};
 	let weatherRequest = new XMLHttpRequest();
-	console.log(
-		`${weatherApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
-	);
 	weatherRequest.open(
 		'GET',
 		`${weatherApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
@@ -74,7 +74,6 @@ async function checkWeather(lat, lon) {
 	);
 
 	weatherRequest.send();
-	console.log(weatherRequest);
 
 	async function createWeatherInfo(
 		weatherData,
@@ -157,6 +156,43 @@ async function geoFindMe() {
 		pLocation.textContent = 'Geolocation is not supported by your browser';
 	} else {
 		pLocation.textContent = 'Locating…';
-		navigator.geolocation.getCurrentPosition(success, error);
+		navigator.geolocation.getCurrentPosition(success, error, {
+			timeout: 1000,
+		});
 	}
+}
+
+function clearInfo() {
+	document.body.innerHTML = `
+        <div class="container">
+            <div class="left"><button type="button" id="currentLocation">Show weather for current location</button>
+                <br>
+                <form id="input">
+                    <h3>Enter a city to check weather</h3>
+                    <input type="text" id="city" name="city">
+                    <br>
+                    <button type="submit" id="submit">Show Weather</button>
+                </form>
+                <div id="location">
+                    <h1>Location coordinates</h1>
+                    <p>No Coordinates</p>
+                </div>
+                <div id="weatherName">
+                    <h1>Weather</h1>
+                    <p>No City Data</p>
+                </div>
+                <div id="weather">
+                    <div id="weatherIcon"><img src="" alt=""></div>
+                    <p>No Weather Data</p>
+                </div>
+            </div>
+            <div class="right">
+                <h3>Weather Forecast</h3>
+                <div id="forecastList">
+
+                </div>
+            </div>
+        </div>
+        <script src="main.js"></script>
+    `;
 }
