@@ -1,5 +1,5 @@
 let API_KEY = '71999687a3a8645a511abce5465479b5';
-let locationApiUrl = `http://api.openweathermap.org/geo/1.0/direct?`;
+let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?`;
 let weatherApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?';
 let units = 'metric';
 let input = document.querySelector('#input');
