@@ -120,7 +120,7 @@ async function checkCurrentWeather(lat, lon) {
 
 		const name = `${location}`;
 
-		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="120px">`;
+		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="130px">`;
 
 		nWeather.innerHTML = name;
 
@@ -167,13 +167,13 @@ async function checkWeather72(lat, lon) {
 		for (i = 7; i <= 24; i += 2) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
 				weather72Data.list[i].weather[0].icon
-			}.png" alt="${
+			}@4x.png" alt="${
 				weather72Data.list[i].weather[0].description
-			}" width="30px" height="30px"></div>${timeFormat(
+			}" height="40px"></div>${timeFormat(
 				new Date(weather72Data.list[i].dt * 1000)
-			)} ${weather72Data.list[i].main.temp.toFixed(
+			)} Temperature: ${weather72Data.list[i].main.temp.toFixed(
 				0
-			)} °C  ${weather72Data.list[i].wind.speed.toFixed(
+			)} °C  <br> Wind: ${weather72Data.list[i].wind.speed.toFixed(
 				0
 			)} m/s from ${degToCompass(weather72Data.list[i].wind.deg)}</div>
 			  </li>`;
@@ -225,13 +225,13 @@ async function checkWeather24(lat, lon) {
 		for (i = 0; i <= 8; i++) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
 				weather24Data.list[i].weather[0].icon
-			}.png" alt="${
+			}@4x.png" alt="${
 				weather24Data.list[i].weather[0].description
-			}" width="30px" height="30px"></div>${timeFormat(
+			}" height="40px"></div>${timeFormat(
 				new Date(weather24Data.list[i].dt * 1000)
-			)} ${weather24Data.list[i].main.temp.toFixed(
+			)} Temperature: ${weather24Data.list[i].main.temp.toFixed(
 				0
-			)} °C  ${weather24Data.list[i].wind.speed.toFixed(
+			)} °C <br> Wind: ${weather24Data.list[i].wind.speed.toFixed(
 				0
 			)} m/s from ${degToCompass(weather24Data.list[i].wind.deg)}</div>
 			  </li>`;

@@ -72,16 +72,18 @@ button:active {
 }
 .left h1 {
 	font-size: 1.1rem;
+	margin-top: 0.3rem;
+	margin-bottom: 0.3rem;
 }
 .left h3 {
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 }
 .left p {
 	font-size: 0.75rem;
 }
 
 .right {
-	font-size: 0.75rem;
+	font-size: 0.6rem;
 	min-width: 250px;
 }
 .right h3 {
@@ -119,5 +121,6 @@ button:active {
 	}
 	.right {
 		margin-top: 1rem;
+		font-size: 0.7rem;
 	}
 }
