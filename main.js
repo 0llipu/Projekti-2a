@@ -161,7 +161,7 @@ async function geoFindMe() {
 	} else {
 		pLocation.textContent = 'Locating…';
 		navigator.geolocation.getCurrentPosition(success, error, {
-			timeout: 1000,
+			timeout: 5000,
 		});
 	}
 }
