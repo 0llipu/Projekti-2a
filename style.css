@@ -111,4 +111,7 @@ button:active {
 	.right div {
 		justify-content: center;
 	}
+	.right {
+		margin-top: 1rem;
+	}
 }
