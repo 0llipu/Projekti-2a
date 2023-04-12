@@ -12,30 +12,37 @@
     </head>
     <body>
         <div class="container">
-            <div class="left"><button type="button" id="currentLocation">Show weather for current location</button>
+            <div class="left"><button type="button" id="currentLocation">Show weather for your current location</button>
                 <br>
                 <form id="input">
                     <h3>Enter a city to check weather</h3>
                     <input type="text" id="city" name="city">
                     <br>
-                    <button type="submit" id="submit">Show Weather</button>
+                    <button type="submit" id="submit">Show City Weather</button>
                 </form>
                 <div id="location">
                     <h1>Location coordinates</h1>
                     <p>No Coordinates</p>
                 </div>
-                <div id="weatherName">
-                    <h1>Weather station</h1>
-                    <p>No City Data</p>
-                </div>
-                <div id="weather">
+                <h1>Current weather</h1>
+
+                <div id="weather" class="current">
+
+                    <div id="weatherInfo">
+                        <h3>Weather station</h3>
+                        <p id="cityName">No City Data</p>
+                        <p id="weatherData">No Weather Data</p>
+                    </div>
                     <div id="weatherIcon"><img src="" alt=""></div>
-                    <p>No Weather Data</p>
                 </div>
-            </div>
-            <div class="right">
+
+
+
                 <h3>Weather Forecast</h3>
                 <button id="check24">Next 24h</button><button id="check72">24h to 72h</button>
+            </div>
+            <div class="right">
+
                 <div id="forecastList">
 
                 </div>

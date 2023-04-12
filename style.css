@@ -26,6 +26,7 @@ body {
 	justify-content: space-around;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 3rem;
 	width: 60%;
 	padding: 1rem;
 	min-width: 600px;
@@ -37,8 +38,8 @@ input,
 button {
 	border-radius: 5px;
 	background: linear-gradient(to top left, #ccffff 0%, #66ccff 100%);
-
-	padding: 0.2rem;
+	font-size: 0.75rem;
+	padding: 0.25rem;
 	margin: 0.1rem;
 }
 
@@ -61,6 +62,11 @@ button:active {
 	opacity: 0.3;
 }
 
+.current {
+	display: flex;
+	text-align: left;
+}
+
 .left {
 	min-width: 250px;
 }
@@ -68,7 +74,7 @@ button:active {
 	font-size: 1.35rem;
 }
 .left h3 {
-	font-size: 1rem;
+	font-size: 0.9rem;
 }
 .left p {
 	font-size: 0.75rem;

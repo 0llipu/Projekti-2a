@@ -29,6 +29,8 @@ async function checkLocation(city) {
 					alert('Did not find that city. Please try again!');
 					pLocation.innerHTML = 'No Coordinates';
 					cityInput.value = '';
+					clearForecast();
+					clearCurrent();
 				} else {
 					getLocationInfo();
 				}
@@ -49,6 +51,7 @@ async function checkLocation(city) {
 
 		pLocation.innerHTML = str;
 		checkCurrentWeather(lat, lon);
+		clearForecast();
 		check24.addEventListener('click', (e) => {
 			checkWeather24(lat, lon);
 		});
@@ -59,8 +62,8 @@ async function checkLocation(city) {
 }
 
 async function checkCurrentWeather(lat, lon) {
-	let nWeather = document.querySelector('#weatherName p');
-	let pWeather = document.querySelector('#weather p');
+	let nWeather = document.querySelector('#cityName');
+	let pWeather = document.querySelector('#weatherData');
 	let iWeather = document.querySelector('#weatherIcon');
 	let currentWeatherData = {};
 	let weatherRequest = new XMLHttpRequest();
@@ -111,12 +114,13 @@ async function checkCurrentWeather(lat, lon) {
 		const icon = currentWeatherData.weather[0].icon;
 		const description = currentWeatherData.weather[0].description;
 		const num = degToCompass(currentWeatherData.wind.deg);
+		const feels = currentWeatherData.main.feels_like.toFixed(0);
 
-		const str = `${time} <br> ${description} <br> ${temp} °C ${wind} m/s from ${num}`;
+		const str = `${time} <br> ${description} <br> Temperature: ${temp} °C <br> Feels like: ${feels} °C <br> Wind: ${wind} m/s from ${num}`;
 
 		const name = `${location}`;
 
-		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="150px">`;
+		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="120px">`;
 
 		nWeather.innerHTML = name;
 
@@ -158,7 +162,7 @@ async function checkWeather72(lat, lon) {
 			});
 
 		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul>';
+		let weatherList = '<ul> <h3> 24h to 72h</h3>';
 
 		for (i = 7; i <= 24; i += 2) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
@@ -216,7 +220,7 @@ async function checkWeather24(lat, lon) {
 			});
 
 		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul>';
+		let weatherList = '<ul> <h3> Next 24h </h3> ';
 
 		for (i = 0; i <= 8; i++) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
@@ -261,6 +265,7 @@ async function geoFindMe() {
 		const longitude = position.coords.longitude;
 		pLocation.innerHTML = `Latitude: ${latitude}° <br> Longitude: ${longitude} °`;
 		checkCurrentWeather(latitude, longitude);
+		clearForecast();
 		check24.addEventListener('click', (e) => {
 			checkWeather24(latitude, longitude);
 		});
@@ -286,22 +291,43 @@ async function geoFindMe() {
 function degToCompass(num) {
 	var val = Math.floor(num / 22.5 + 0.5);
 	var arr = [
-		'N',
-		'NNE',
-		'NE',
-		'ENE',
-		'E',
-		'ESE',
-		'SE',
-		'SSE',
-		'S',
-		'SSW',
-		'SW',
-		'WSW',
-		'W',
-		'WNW',
-		'NW',
-		'NNW',
+		'North',
+		'North NE',
+		'North E',
+		'East NE',
+		'East',
+		'Eeast SE',
+		'South E',
+		'South SE',
+		'South',
+		'South SW',
+		'South W',
+		'West SW',
+		'West',
+		'West NW',
+		'North W',
+		'North NW',
 	];
 	return arr[val % 16];
+}
+function clearForecast() {
+	let forecastList = document.querySelector('#forecastList');
+	forecastList.innerHTML = '';
+}
+
+function clearCurrent() {
+	let location = document.querySelector('#location');
+
+	location.innerHTML = ` <h1>Location coordinates</h1>
+                    <p>No Coordinates</p>`;
+
+	let currentWeatherInfo = document.querySelector('#weather');
+
+	currentWeatherInfo.innerHTML = `
+                    <div id="weatherInfo">
+                        <h3>Weather station</h3>
+                        <p id="cityName">No City Data</p>
+                        <p id="weatherData">No Weather Data</p>
+                    </div>
+                    <div id="weatherIcon"><img src="" alt=""></div>`;
 }
