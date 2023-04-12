@@ -1,11 +1,14 @@
 let API_KEY = '71999687a3a8645a511abce5465479b5';
 let locationApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=`;
-let weatherApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?';
+let weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+let forecastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?';
 let units = 'metric';
 let input = document.querySelector('#input');
 let cityInput = document.querySelector('#city');
 let weatherForCurrentLocation = document.querySelector('#currentLocation');
 let pLocation = document.querySelector('#location p');
+let check24 = document.querySelector('#check24');
+let check72 = document.querySelector('#check72');
 
 async function checkLocation(city) {
 	let locationData = {};
@@ -45,14 +48,21 @@ async function checkLocation(city) {
 		const str = ` Latitude: ${lat} ° <br> Longitude: ${lon} °`;
 
 		pLocation.innerHTML = str;
-		checkWeather(lat, lon);
+		checkCurrentWeather(lat, lon);
+		check24.addEventListener('click', (e) => {
+			checkWeather24(lat, lon);
+		});
+		check72.addEventListener('click', (e) => {
+			checkWeather72(lat, lon);
+		});
 	}
 }
-async function checkWeather(lat, lon) {
+
+async function checkCurrentWeather(lat, lon) {
 	let nWeather = document.querySelector('#weatherName p');
 	let pWeather = document.querySelector('#weather p');
 	let iWeather = document.querySelector('#weatherIcon');
-	let weatherData = {};
+	let currentWeatherData = {};
 	let weatherRequest = new XMLHttpRequest();
 	weatherRequest.open(
 		'GET',
@@ -65,8 +75,13 @@ async function checkWeather(lat, lon) {
 		function () {
 			if (weatherRequest.status === 200) {
 				pWeather.textContent = 'loading...';
-				weatherData = JSON.parse(weatherRequest.responseText);
-				createWeatherInfo(weatherData, pWeather, nWeather, iWeather);
+				currentWeatherData = JSON.parse(weatherRequest.responseText);
+				createCurrentWeatherInfo(
+					currentWeatherData,
+					pWeather,
+					nWeather,
+					iWeather
+				);
 			} else {
 				pWeather.textContent = 'error: ' + weatherRequest.status;
 			}
@@ -76,8 +91,8 @@ async function checkWeather(lat, lon) {
 
 	weatherRequest.send();
 
-	async function createWeatherInfo(
-		weatherData,
+	async function createCurrentWeatherInfo(
+		currentWeatherData,
 		pWeather,
 		nWeather,
 		iWeather
@@ -89,44 +104,140 @@ async function checkWeather(lat, lon) {
 				hour: '2-digit',
 				minute: '2-digit',
 			});
-		const location = weatherData.city.name;
-		const temp = weatherData.list[0].main.temp.toFixed(0);
-		const wind = weatherData.list[0].wind.speed.toFixed(0);
-		const time = timeFormat(new Date(weatherData.list[0].dt * 1000));
-		const icon = weatherData.list[0].weather[0].icon;
-		const description = weatherData.list[0].weather[0].description;
-		const num = degToCompass(weatherData.list[0].wind.deg);
-
-		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul>';
-
-		for (i = 2; i <= 24; i += 2) {
-			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
-				weatherData.list[i].weather[0].icon
-			}.png" alt="${
-				weatherData.list[i].weather[0].description
-			}" width="30px" height="30px"></div>${timeFormat(
-				new Date(weatherData.list[i].dt * 1000)
-			)} ${weatherData.list[i].main.temp.toFixed(
-				0
-			)} °C  ${weatherData.list[i].wind.speed.toFixed(
-				0
-			)} m/s from ${degToCompass(weatherData.list[i].wind.deg)}</div>
-			  </li>`;
-		}
-		weatherList += '</ul>';
-		forecastList.innerHTML = weatherList;
+		const location = currentWeatherData.name;
+		const temp = currentWeatherData.main.temp.toFixed(0);
+		const wind = currentWeatherData.wind.speed.toFixed(0);
+		const time = timeFormat(new Date(currentWeatherData.dt * 1000));
+		const icon = currentWeatherData.weather[0].icon;
+		const description = currentWeatherData.weather[0].description;
+		const num = degToCompass(currentWeatherData.wind.deg);
 
 		const str = `${time} <br> ${description} <br> ${temp} °C ${wind} m/s from ${num}`;
 
 		const name = `${location}`;
 
-		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="100px">`;
+		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="200px">`;
 
 		nWeather.innerHTML = name;
 
 		pWeather.innerHTML = str;
 	}
+}
+
+async function checkWeather72(lat, lon) {
+	let weather72Data = {};
+	let weather72Request = new XMLHttpRequest();
+	weather72Request.open(
+		'GET',
+		`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
+	);
+	weather72Request.responseType = 'text';
+
+	weather72Request.addEventListener(
+		'load',
+		function () {
+			if (weather72Request.status === 200) {
+				weather72Data = JSON.parse(weather72Request.responseText);
+				createWeather72Info(weather72Data);
+			} else {
+				console.log(weather72Request.status);
+			}
+		},
+		false
+	);
+
+	weather72Request.send();
+
+	async function createWeather72Info(weather72Data) {
+		const timeFormat = (date) =>
+			date.toLocaleString('en-gb', {
+				month: 'short',
+				day: '2-digit',
+				hour: '2-digit',
+				minute: '2-digit',
+			});
+
+		let forecastList = document.querySelector('#forecastList');
+		let weatherList = '<ul>';
+
+		for (i = 7; i <= 24; i += 2) {
+			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
+				weather72Data.list[i].weather[0].icon
+			}.png" alt="${
+				weather72Data.list[i].weather[0].description
+			}" width="30px" height="30px"></div>${timeFormat(
+				new Date(weather72Data.list[i].dt * 1000)
+			)} ${weather72Data.list[i].main.temp.toFixed(
+				0
+			)} °C  ${weather72Data.list[i].wind.speed.toFixed(
+				0
+			)} m/s from ${degToCompass(weather72Data.list[i].wind.deg)}</div>
+			  </li>`;
+		}
+		weatherList += '</ul>';
+		forecastList.innerHTML = weatherList;
+	}
+	check72.addEventListener('click', (e) => {
+		checkWeather72(lat, lon);
+	});
+}
+
+async function checkWeather24(lat, lon) {
+	let weather24Data = {};
+	let weather24Request = new XMLHttpRequest();
+	weather24Request.open(
+		'GET',
+		`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
+	);
+	weather24Request.responseType = 'text';
+
+	weather24Request.addEventListener(
+		'load',
+		function () {
+			if (weather24Request.status === 200) {
+				weather24Data = JSON.parse(weather24Request.responseText);
+				createWeather24Info(weather24Data);
+			} else {
+				console.log(weather24Request.status);
+			}
+		},
+		false
+	);
+
+	weather24Request.send();
+
+	async function createWeather24Info(weather24Data) {
+		const timeFormat = (date) =>
+			date.toLocaleString('en-gb', {
+				month: 'short',
+				day: '2-digit',
+				hour: '2-digit',
+				minute: '2-digit',
+			});
+
+		let forecastList = document.querySelector('#forecastList');
+		let weatherList = '<ul>';
+
+		for (i = 0; i <= 8; i++) {
+			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
+				weather24Data.list[i].weather[0].icon
+			}.png" alt="${
+				weather24Data.list[i].weather[0].description
+			}" width="30px" height="30px"></div>${timeFormat(
+				new Date(weather24Data.list[i].dt * 1000)
+			)} ${weather24Data.list[i].main.temp.toFixed(
+				0
+			)} °C  ${weather24Data.list[i].wind.speed.toFixed(
+				0
+			)} m/s from ${degToCompass(weather24Data.list[i].wind.deg)}</div>
+			  </li>`;
+		}
+		weatherList += '</ul>';
+		forecastList.innerHTML = weatherList;
+	}
+	check24.addEventListener('click', (e) => {
+		checkWeather24(lat, lon);
+	});
 }
 
 input.addEventListener('submit', (e) => {
@@ -149,7 +260,13 @@ async function geoFindMe() {
 		const latitude = position.coords.latitude;
 		const longitude = position.coords.longitude;
 		pLocation.innerHTML = `Latitude: ${latitude}° <br> Longitude: ${longitude} °`;
-		checkWeather(latitude, longitude);
+		checkCurrentWeather(latitude, longitude);
+		check24.addEventListener('click', (e) => {
+			checkWeather24(latitude, longitude);
+		});
+		check72.addEventListener('click', (e) => {
+			checkWeather72(latitude, longitude);
+		});
 	}
 
 	function error() {
@@ -164,10 +281,6 @@ async function geoFindMe() {
 			timeout: 5000,
 		});
 	}
-}
-
-function clearInput() {
-	document.getElementById('city').reset();
 }
 
 function degToCompass(num) {
