@@ -8,19 +8,27 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
-        <link rel="icon" href="https://openweathermap.org/img/wn/02d.png">
+        <link rel="icon" href="images/thermometer-sun.svg">
         <title>Weather App</title>
     </head>
     <body>
-        <div class="container">
-            <div class="left"><button type="button" id="currentLocation">Show weather for your current location</button>
-                <br>
-                <form id="input">
-                    <h3>Enter a city to check weather</h3>
-                    <input type="text" id="city" name="city">
-                    <br>
-                    <button type="submit" id="submit">Show City Weather</button>
-                </form>
+        <div class="container" id="container">
+
+            <div class="left">
+                <div class="search"><button type="button" id="currentLocation"><svg xmlns="http://www.w3.org/2000/svg"
+                            width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                        </svg></button>
+                    <form id="input">
+                        <input type="text" id="city" name="city" width="150" height="16">
+                        <button type="submit" id="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg></button>
+                    </form>
+                </div>
                 <div id="location">
                     <h1>Location coordinates</h1>
                     <p>No Coordinates</p>
@@ -28,21 +36,23 @@
                 <h1>Current weather</h1>
 
                 <div id="weather" class="current">
-
-                    <div id="weatherInfo">
-                        <h3>Weather station</h3>
-                        <p id="cityName">No City Data</p>
-                        <p id="weatherData">No Weather Data</p>
+                    <div>
+                        <p id="temp" class="temp"></p>
                     </div>
                     <div id="weatherIcon"><img src="" alt=""></div>
                 </div>
+                <div id="weatherInfo">
+                    <h3>Weather station details</h3>
+                    <p id="cityName">No City Data</p>
+                    <p id="weatherData">No Weather Data</p>
+                </div>
+                <div id="forecast">
+                    <h3>Weather Forecast</h3>
+                    <button id="check24">Next 24h</button><button id="check72">24h to 72h</button>
+                </div>
 
-
-
-                <h3>Weather Forecast</h3>
-                <button id="check24">Next 24h</button><button id="check72">24h to 72h</button>
             </div>
-            <div class="right">
+            <div class="right" id="right">
 
                 <div id="forecastList">
 

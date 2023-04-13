@@ -10,6 +10,51 @@ let pLocation = document.querySelector('#location p');
 let check24 = document.querySelector('#check24');
 let check72 = document.querySelector('#check72');
 
+weatherForCurrentLocation.addEventListener('click', geoFindMe);
+
+input.addEventListener('submit', (e) => {
+	e.preventDefault();
+	let city = e.target.elements.city.value;
+
+	if (city !== '') {
+		checkLocation(city);
+	} else {
+		alert("City input can't be empty!");
+		console.log('error');
+		return;
+	}
+});
+
+function geoFindMe() {
+	function success(position) {
+		const latitude = position.coords.latitude;
+		const longitude = position.coords.longitude;
+		pLocation.innerHTML = `Latitude: ${latitude}° <br> Longitude: ${longitude} °`;
+		checkCurrentWeather(latitude, longitude);
+		clearForecast();
+		hideForecast();
+		check24.addEventListener('click', (e) => {
+			checkWeather24(latitude, longitude);
+		});
+		check72.addEventListener('click', (e) => {
+			checkWeather72(latitude, longitude);
+		});
+	}
+
+	function error() {
+		pLocation.textContent = 'Unable to retrieve your location';
+	}
+
+	if (!navigator.geolocation) {
+		pLocation.textContent = 'Geolocation is not supported by your browser';
+	} else {
+		pLocation.textContent = 'Locating…';
+		navigator.geolocation.getCurrentPosition(success, error, {
+			timeout: 5000,
+		});
+	}
+}
+
 async function checkLocation(city) {
 	let locationData = {};
 	let locationRequest = new XMLHttpRequest();
@@ -52,6 +97,7 @@ async function checkLocation(city) {
 		pLocation.innerHTML = str;
 		checkCurrentWeather(lat, lon);
 		clearForecast();
+		hideForecast();
 		check24.addEventListener('click', (e) => {
 			checkWeather24(lat, lon);
 		});
@@ -65,6 +111,7 @@ async function checkCurrentWeather(lat, lon) {
 	let nWeather = document.querySelector('#cityName');
 	let pWeather = document.querySelector('#weatherData');
 	let iWeather = document.querySelector('#weatherIcon');
+	let tWeather = document.querySelector('#temp');
 	let currentWeatherData = {};
 	let weatherRequest = new XMLHttpRequest();
 	weatherRequest.open(
@@ -83,7 +130,8 @@ async function checkCurrentWeather(lat, lon) {
 					currentWeatherData,
 					pWeather,
 					nWeather,
-					iWeather
+					iWeather,
+					tWeather
 				);
 			} else {
 				pWeather.textContent = 'error: ' + weatherRequest.status;
@@ -98,7 +146,8 @@ async function checkCurrentWeather(lat, lon) {
 		currentWeatherData,
 		pWeather,
 		nWeather,
-		iWeather
+		iWeather,
+		tWeather
 	) {
 		const timeFormat = (date) =>
 			date.toLocaleString('en-gb', {
@@ -115,16 +164,87 @@ async function checkCurrentWeather(lat, lon) {
 		const description = currentWeatherData.weather[0].description;
 		const num = degToCompass(currentWeatherData.wind.deg);
 		const feels = currentWeatherData.main.feels_like.toFixed(0);
+		const sunrise = new Date(
+			currentWeatherData.sys.sunrise * 1000
+		).toLocaleString('en-gb', {
+			hour: '2-digit',
+			minute: '2-digit',
+		});
+		const sunset = new Date(
+			currentWeatherData.sys.sunset * 1000
+		).toLocaleString('en-gb', {
+			hour: '2-digit',
+			minute: '2-digit',
+		});
 
-		const str = `${time} <br> ${description} <br> Temperature: ${temp} °C <br> Feels like: ${feels} °C <br> Wind: ${wind} m/s from ${num}`;
+		const str = `${time} <br> ${description} <br> Feels like: ${feels} °C <br> Wind: ${wind} m/s from ${num} <br> Sunrise: ${sunrise} <br> Sunset: ${sunset}`;
 
 		const name = `${location}`;
 
-		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="130px">`;
+		tWeather.innerHTML = `${temp} °C`;
+
+		iWeather.innerHTML = `<img src="https://openweathermap.org/img/wn/${icon}@4x.png" alt="${description}" height="120px">`;
 
 		nWeather.innerHTML = name;
 
 		pWeather.innerHTML = str;
+	}
+}
+
+async function checkWeather24(lat, lon) {
+	let weather24Data = {};
+	let weather24Request = new XMLHttpRequest();
+	weather24Request.open(
+		'GET',
+		`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
+	);
+	weather24Request.responseType = 'text';
+
+	weather24Request.addEventListener(
+		'load',
+		function () {
+			if (weather24Request.status === 200) {
+				weather24Data = JSON.parse(weather24Request.responseText);
+				createWeather24Info(weather24Data);
+			} else {
+				console.log(weather24Request.status);
+			}
+		},
+		false
+	);
+
+	weather24Request.send();
+
+	async function createWeather24Info(weather24Data) {
+		const timeFormat = (date) =>
+			date.toLocaleString('en-gb', {
+				month: 'short',
+				day: '2-digit',
+				hour: '2-digit',
+				minute: '2-digit',
+			});
+
+		let forecastList = document.querySelector('#forecastList');
+		let weatherList = '<ul> <h3> Next 24h </h3> ';
+
+		for (i = 0; i <= 8; i++) {
+			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
+				weather24Data.list[i].weather[0].icon
+			}@4x.png" alt="${
+				weather24Data.list[i].weather[0].description
+			}" height="40px"></div>${timeFormat(
+				new Date(weather24Data.list[i].dt * 1000)
+			)} Temperature: ${weather24Data.list[i].main.temp.toFixed(
+				0
+			)} °C <br> Wind: ${weather24Data.list[i].wind.speed.toFixed(
+				0
+			)} m/s from ${degToCompass(weather24Data.list[i].wind.deg)}</div>
+			  </li>`;
+		}
+		weatherList += '</ul>';
+		forecastList.innerHTML = weatherList;
+
+		showForecast();
 	}
 }
 
@@ -180,111 +300,8 @@ async function checkWeather72(lat, lon) {
 		}
 		weatherList += '</ul>';
 		forecastList.innerHTML = weatherList;
-	}
-	check72.addEventListener('click', (e) => {
-		checkWeather72(lat, lon);
-	});
-}
 
-async function checkWeather24(lat, lon) {
-	let weather24Data = {};
-	let weather24Request = new XMLHttpRequest();
-	weather24Request.open(
-		'GET',
-		`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
-	);
-	weather24Request.responseType = 'text';
-
-	weather24Request.addEventListener(
-		'load',
-		function () {
-			if (weather24Request.status === 200) {
-				weather24Data = JSON.parse(weather24Request.responseText);
-				createWeather24Info(weather24Data);
-			} else {
-				console.log(weather24Request.status);
-			}
-		},
-		false
-	);
-
-	weather24Request.send();
-
-	async function createWeather24Info(weather24Data) {
-		const timeFormat = (date) =>
-			date.toLocaleString('en-gb', {
-				month: 'short',
-				day: '2-digit',
-				hour: '2-digit',
-				minute: '2-digit',
-			});
-
-		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul> <h3> Next 24h </h3> ';
-
-		for (i = 0; i <= 8; i++) {
-			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
-				weather24Data.list[i].weather[0].icon
-			}@4x.png" alt="${
-				weather24Data.list[i].weather[0].description
-			}" height="40px"></div>${timeFormat(
-				new Date(weather24Data.list[i].dt * 1000)
-			)} Temperature: ${weather24Data.list[i].main.temp.toFixed(
-				0
-			)} °C <br> Wind: ${weather24Data.list[i].wind.speed.toFixed(
-				0
-			)} m/s from ${degToCompass(weather24Data.list[i].wind.deg)}</div>
-			  </li>`;
-		}
-		weatherList += '</ul>';
-		forecastList.innerHTML = weatherList;
-	}
-	check24.addEventListener('click', (e) => {
-		checkWeather24(lat, lon);
-	});
-}
-
-input.addEventListener('submit', (e) => {
-	e.preventDefault();
-	let city = e.target.elements.city.value;
-
-	if (city !== '') {
-		checkLocation(city);
-	} else {
-		alert("City input can't be empty!");
-		console.log('error');
-		return;
-	}
-});
-
-weatherForCurrentLocation.addEventListener('click', geoFindMe);
-
-async function geoFindMe() {
-	function success(position) {
-		const latitude = position.coords.latitude;
-		const longitude = position.coords.longitude;
-		pLocation.innerHTML = `Latitude: ${latitude}° <br> Longitude: ${longitude} °`;
-		checkCurrentWeather(latitude, longitude);
-		clearForecast();
-		check24.addEventListener('click', (e) => {
-			checkWeather24(latitude, longitude);
-		});
-		check72.addEventListener('click', (e) => {
-			checkWeather72(latitude, longitude);
-		});
-	}
-
-	function error() {
-		pLocation.textContent = 'Unable to retrieve your location';
-	}
-
-	if (!navigator.geolocation) {
-		pLocation.textContent = 'Geolocation is not supported by your browser';
-	} else {
-		pLocation.textContent = 'Locating…';
-		navigator.geolocation.getCurrentPosition(success, error, {
-			timeout: 5000,
-		});
+		showForecast();
 	}
 }
 
@@ -330,4 +347,20 @@ function clearCurrent() {
                         <p id="weatherData">No Weather Data</p>
                     </div>
                     <div id="weatherIcon"><img src="" alt=""></div>`;
+}
+
+function showForecast() {
+	let right = document.getElementById('right');
+	let container = document.getElementById('container');
+	right.classList.add('forecastDisplay');
+	container.classList.add('forecastWidth');
+	container.classList.add('forecastMinWidth');
+}
+
+function hideForecast() {
+	let right = document.getElementById('right');
+	let container = document.getElementById('container');
+	right.classList.remove('forecastDisplay');
+	container.classList.remove('forecastWidth');
+	container.classList.remove('forecastMinWidth');
 }

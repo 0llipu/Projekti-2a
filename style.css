@@ -20,6 +20,27 @@ body {
 	background-color: lightslategrey;
 }
 
+body h,
+p {
+	margin-left: 0.3rem;
+}
+
+body h1 {
+	font-size: 1rem;
+	margin-top: 0.3rem;
+	margin-bottom: 0.3rem;
+	font-weight: 100;
+}
+
+body h3 {
+	font-size: 0.8rem;
+	font-weight: 100;
+}
+
+body p {
+	font-size: 0.65rem;
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -27,29 +48,45 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 3rem;
-	width: 60%;
+	width: 30%;
 	padding: 1rem;
-	min-width: 600px;
-	background: linear-gradient(to bottom right, #ccffff 0%, #0099ff 100%);
+	min-width: 300px;
+	background: linear-gradient(to bottom right, #0066cc 0%, #6699ff 100%);
 	border-radius: 25px;
+	color: rgb(255, 255, 255);
+}
+
+.forecastWidth {
+	width: 60%;
+}
+
+.forecastMinWidth {
+	min-width: 600px;
+}
+
+.forecastDisplay {
+	display: flex !important;
+}
+
+.search {
+	display: flex;
 }
 
 input,
 button {
-	border-radius: 5px;
-	background: linear-gradient(to top left, #ccffff 0%, #66ccff 100%);
-	font-size: 0.75rem;
-	padding: 0.25rem;
-	margin: 0.1rem;
+	padding: 0.3rem;
+	color: white;
 }
 
 input {
-	box-shadow: rgb(57, 57, 57) 0px 0px 1px 1px;
+	border-bottom: solid 1px white;
 }
 
 button {
 	cursor: pointer;
-	box-shadow: rgb(105, 105, 105) 1px 1px;
+}
+button #submit {
+	margin-right: 0.4rem;
 }
 
 input:hover {
@@ -62,33 +99,35 @@ button:active {
 	opacity: 0.3;
 }
 
+#location {
+	margin-top: 1rem;
+}
+
+#forecast {
+	margin-top: 1rem;
+}
+
 .current {
 	display: flex;
 	text-align: left;
+	justify-content: center;
+	align-items: center;
+}
+
+.temp,
+#temp p {
+	font-size: 3rem;
+	margin-left: 2rem;
 }
 
 .left {
 	min-width: 250px;
 }
-.left h1 {
-	font-size: 1.1rem;
-	margin-top: 0.3rem;
-	margin-bottom: 0.3rem;
-}
-.left h3 {
-	font-size: 0.8rem;
-}
-.left p {
-	font-size: 0.75rem;
-}
 
 .right {
+	display: none;
 	font-size: 0.6rem;
 	min-width: 250px;
-}
-.right h3 {
-	font-size: 1rem;
-	margin-left: 1rem;
 }
 
 .right ul li {
@@ -122,5 +161,8 @@ button:active {
 	.right {
 		margin-top: 1rem;
 		font-size: 0.7rem;
+	}
+	.search {
+		justify-content: center;
 	}
 }
