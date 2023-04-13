@@ -17,7 +17,8 @@ form {
 }
 
 body {
-	background-color: lightslategrey;
+	background: linear-gradient(to top left, #000066 0%, #0066ff 100%);
+	background-attachment: fixed;
 }
 
 body h,
@@ -54,6 +55,7 @@ body p {
 	background: linear-gradient(to bottom right, #0066cc 0%, #6699ff 100%);
 	border-radius: 25px;
 	color: rgb(255, 255, 255);
+	margin-bottom: 3rem;
 }
 
 .forecastWidth {
