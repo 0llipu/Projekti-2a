@@ -226,7 +226,7 @@ async function checkWeather24(lat, lon) {
 			});
 
 		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul> <h3> Next 24h </h3> ';
+		let weatherList = '<ul> ';
 
 		for (i = 0; i <= 8; i++) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
@@ -283,7 +283,7 @@ async function checkWeather72(lat, lon) {
 			});
 
 		let forecastList = document.querySelector('#forecastList');
-		let weatherList = '<ul> <h3> 24h to 72h</h3>';
+		let weatherList = '<ul>';
 
 		for (i = 7; i <= 24; i += 2) {
 			weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
