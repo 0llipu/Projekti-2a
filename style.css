@@ -75,10 +75,16 @@ body p {
 
 /* Button & Input field styling */
 
+form {
+	display: flex;
+}
+
 input,
 button {
-	padding: 0.3rem;
+	padding: 0.2rem;
 	color: var(--text-color);
+	display: flex;
+	margin: auto;
 }
 
 input {
@@ -91,8 +97,8 @@ input {
 }
 
 #city {
-	font-size: 1rem;
-	margin-left: 0.5rem;
+	font-size: 0.8rem;
+	margin-left: 2rem;
 }
 button {
 	cursor: pointer;
