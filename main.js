@@ -341,13 +341,17 @@ function clearCurrent() {
 
 	let currentWeatherInfo = document.querySelector('#weather');
 
-	currentWeatherInfo.innerHTML = `
-                    <div id="weatherInfo">
-                        <h3>Weather station</h3>
-                        <p id="cityName">No City Data</p>
-                        <p id="weatherData">No Weather Data</p>
+	currentWeatherInfo.innerHTML = `<div class="current">
+                    <div>
+                        <p id="temp" class="temp"></p>
                     </div>
-                    <div id="weatherIcon"><img src="" alt=""></div>`;
+                    <div id="weatherIcon"><img src="" alt=""></div>
+                </div>
+                <div id="weatherInfo">
+                    <h3>Weather station details</h3>
+                    <p id="cityName">No City Data</p>
+                    <p id="weatherData">No Weather Data</p>
+                </div>`;
 }
 
 function showForecast() {
