@@ -15,9 +15,20 @@ form {
 	background: none;
 	cursor: initial;
 }
+/* Resets end */
+
+/* Variables for colors */
+
+:root {
+	--primary: linear-gradient(to top left, #000066 0%, #0066ff 100%);
+	--text-color: rgb(255, 255, 255);
+	--app: linear-gradient(to bottom right, #0066cc 0%, #6699ff 100%);
+}
+
+/* Universal styling for body */
 
 body {
-	background: linear-gradient(to top left, #000066 0%, #0066ff 100%);
+	background: var(--primary);
 	background-attachment: fixed;
 }
 
@@ -42,6 +53,8 @@ body p {
 	font-size: 0.65rem;
 }
 
+/* Container styling */
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -53,62 +66,56 @@ body p {
 	padding: 1rem;
 	min-width: 300px;
 	max-width: 620px;
-	background: linear-gradient(to bottom right, #0066cc 0%, #6699ff 100%);
+	background: var(--app);
 	border-radius: 25px;
-	color: rgb(255, 255, 255);
+	color: var(--text-color);
 	margin-bottom: 3rem;
+	box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2);
 }
 
-.forecastWidth {
-	width: 60%;
+/* Button & Input field styling */
+
+input,
+button {
+	padding: 0.3rem;
+	color: var(--text-color);
 }
 
-.forecastMinWidth {
-	min-width: 600px;
+input {
+	background-color: transparent !important;
 }
 
-.forecastDisplay {
-	display: flex !important;
+::placeholder {
+	color: var(--text-color);
+	opacity: 0.25;
+}
+
+#city {
+	font-size: 1rem;
+	margin-left: 0.5rem;
+}
+button {
+	cursor: pointer;
+}
+
+button #submit {
+	margin-right: 0.4rem;
+}
+
+input:hover,
+button:hover {
+	opacity: 0.5;
+}
+
+button:active {
+	opacity: 0.3;
 }
 
 .search {
 	display: flex;
 }
 
-input,
-button {
-	padding: 0.3rem;
-	color: white;
-}
-
-input {
-	border-bottom: solid 1px white;
-}
-
-button {
-	cursor: pointer;
-}
-button #submit {
-	margin-right: 0.4rem;
-}
-
-input:hover {
-	opacity: 0.5;
-}
-button:hover {
-	opacity: 0.5;
-}
-button:active {
-	opacity: 0.3;
-}
-
-#location {
-	margin-top: 1rem;
-}
-
-#forecast {
-	margin-top: 1rem;
-}
+/* Current weather styling */
 
 .current {
 	display: flex;
@@ -123,14 +130,35 @@ button:active {
 	margin-left: 2rem;
 }
 
-.left {
-	min-width: 250px;
+/* Adding margin between sections */
+
+#location,
+#forecast {
+	margin-top: 1rem;
+}
+
+/* Styling the right div & forecast section */
+
+.forecastWidth {
+	width: 60%;
+}
+
+.forecastMinWidth {
+	min-width: 600px;
+}
+
+.forecastDisplay {
+	display: flex !important;
 }
 
 .right {
 	display: none;
-	font-size: 0.6rem;
-	min-width: 250px;
+	font-size: 0.7rem;
+}
+
+.right h3 {
+	text-align: center;
+	margin-bottom: 1rem;
 }
 
 .right ul li {
@@ -147,6 +175,8 @@ button:active {
 	margin-left: 0.25rem;
 }
 
+/* Responsiveness */
+
 @media only screen and (max-width: 620px) {
 	.container {
 		flex-direction: column;
@@ -154,10 +184,7 @@ button:active {
 		width: 90%;
 		min-width: 300px;
 	}
-	.left,
-	.right {
-		text-align: center;
-	}
+
 	.right div {
 		justify-content: center;
 	}

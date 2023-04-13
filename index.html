@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+    <!-- Head Element with defaults, font link, stylesheet link and the website title icon svg link -->
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,28 +13,38 @@
         <link rel="icon" href="images/thermometer-sun.svg">
         <title>Weather App</title>
     </head>
-    <body>
-        <div class="container" id="container">
+    <!-- Head ends -->
 
+    <!-- Body Element with container for the app, SVGs used for the location and search buttons-->
+    <body>
+        <!-- Container is divided to the left-section that is always visible and the right section is showed when user wants to see the weather forecast-->
+        <div class="container" id="container">
+            <!-- This left section is always visible -->
             <div class="left">
-                <div class="search"><button type="button" id="currentLocation"><svg xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
-                        </svg></button>
+                <!-- Location-section to search by city or current location-->
+                <div class="search">
                     <form id="input">
-                        <input type="text" id="city" name="city" width="150" height="16">
-                        <button type="submit" id="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        <button type="button" id="currentLocation"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                height="20" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                            </svg></button>
+                        <input type="text" id="city" name="city" size="15" height="20"
+                            placeholder="Search for a city..">
+                        <button type="submit" id="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                 <path
                                     d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                             </svg></button>
                     </form>
                 </div>
+                <!-- Location info section-->
                 <div id="location">
                     <h1>Location coordinates</h1>
                     <p>No Coordinates</p>
                 </div>
+                <!-- Location info ends -->
+                <!-- Current weather section -->
                 <h1>Current weather</h1>
                 <div id="weather">
                     <div class="current">
@@ -47,21 +59,26 @@
                         <p id="weatherData">No Weather Data</p>
                     </div>
                 </div>
-
-
+                <!-- Current weather section ends -->
+                <!-- Forecast buttons that activate the right side with either 24h or 24-72h info -->
                 <div id="forecast">
                     <h3>Weather Forecast</h3>
                     <button id="check24">Next 24h</button><button id="check72">24h to 72h</button>
                 </div>
-
+                <!-- Forecast button section ends -->
             </div>
+            <!-- Left section ends -->
+            <!-- This right section is visible when user wants to see the weather forecast-->
             <div class="right" id="right">
-
                 <div id="forecastList">
-
                 </div>
             </div>
+            <!-- Right section ends -->
         </div>
+
+        <!-- Container ends-->
+        <!-- script source for the Javascript -->
         <script src="main.js"></script>
     </body>
+    <!-- Body ends -->
 </html>
