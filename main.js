@@ -25,7 +25,7 @@ input.addEventListener('submit', (e) => {
 	}
 });
 
-function geoFindMe() {
+async function geoFindMe() {
 	function success(position) {
 		const latitude = position.coords.latitude;
 		const longitude = position.coords.longitude;
@@ -74,6 +74,7 @@ async function checkLocation(city) {
 					alert('Did not find that city. Please try again!');
 					pLocation.innerHTML = 'No Coordinates';
 					cityInput.value = '';
+					hideForecast();
 					clearForecast();
 					clearCurrent();
 				} else {
