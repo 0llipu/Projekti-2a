@@ -25,7 +25,7 @@ input.addEventListener('submit', (e) => {
 	}
 });
 
-async function geoFindMe() {
+async function geoFindMe(pLocation) {
 	function success(position) {
 		const latitude = position.coords.latitude;
 		const longitude = position.coords.longitude;
@@ -89,7 +89,7 @@ async function checkLocation(city) {
 
 	locationRequest.send();
 
-	async function getLocationInfo() {
+	async function getLocationInfo(pLocation) {
 		const lat = locationData[0].lat;
 		const lon = locationData[0].lon;
 
@@ -336,7 +336,7 @@ function clearForecast() {
 function clearCurrent() {
 	let location = document.querySelector('#location');
 
-	location.innerHTML = ` <h1>Location coordinates</h1>
+	location.innerHTML = `<h1>Location coordinates</h1>
                     <p>No Coordinates</p>`;
 
 	let currentWeatherInfo = document.querySelector('#weather');
