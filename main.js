@@ -333,7 +333,7 @@ window.addEventListener('load', () => {
 			// For loop is used to look up next 24h with a 3h interval and inserting it to the html
 			let forecastList = document.querySelector('#forecastList');
 			let weatherList =
-				'<ul> <h3> Forecast for the next 24h to 72h </h3> ';
+				'<ul> <h3> Forecast from the next 24h to 72h </h3> ';
 			// For loop for the weather information between 6h intervals
 			for (i = 7; i <= 24; i += 2) {
 				weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${

@@ -137,6 +137,11 @@ button:active {
 	margin-left: 2rem;
 }
 
+#check24,
+#check72 {
+	display: inline !important;
+}
+
 /* Adding margin between sections */
 
 #location,
