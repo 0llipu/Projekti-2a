@@ -23,7 +23,7 @@ form {
 :root {
 	--primary: linear-gradient(to top left, #000066 0%, #0066ff 100%);
 	--text-color: rgb(255, 255, 255);
-	--app: linear-gradient(to bottom right, #0066cc 0%, #6699ff 100%);
+	--app: linear-gradient(to bottom right, #000099 0%, #0066ff 100%);
 }
 
 /* Universal styling for body */
