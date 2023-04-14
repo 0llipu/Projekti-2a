@@ -12,6 +12,7 @@ window.addEventListener('load', () => {
 	let cityInput = document.querySelector('#city');
 	let weatherForCurrentLocation = document.querySelector('#currentLocation');
 	let pLocation = document.querySelector('#location p');
+	let forecastList = document.querySelector('#forecastList');
 	let check24 = document.querySelector('#check24');
 	let check72 = document.querySelector('#check72');
 	let forecast24 = false;
@@ -42,6 +43,7 @@ window.addEventListener('load', () => {
 		forecast24 = true;
 		forecast72 = false;
 	});
+
 	check72.addEventListener('click', (e) => {
 		checkForecast(latitude, longitude);
 		forecast72 = true;
@@ -250,12 +252,11 @@ window.addEventListener('load', () => {
 		// For loop is used to look up next 24h with a 3h interval and inserting it to the HTML element
 
 		function createForecast24Info(forecastData) {
-			let forecastList = document.querySelector('#forecastList');
-			let weatherList = '<ul> <h3> Forecast for the next 24h</h3>';
+			let forecastFor24 = '<ul> <h3> Forecast for the next 24h</h3>';
 
 			// For loop for the weather information between 3h intervals
 			for (i = 0; i <= 8; i++) {
-				weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
+				forecastFor24 += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
 					forecastData.list[i].weather[0].icon
 				}@4x.png" alt="${
 					forecastData.list[i].weather[0].description
@@ -273,9 +274,9 @@ window.addEventListener('load', () => {
 				)} m/s from ${degToCompass(forecastData.list[i].wind.deg)}</div>
 			  </li>`;
 			}
-			weatherList += '</ul>';
+			forecastFor24 += '</ul>';
 
-			forecastList.innerHTML = weatherList; // Command to insert the created object into the html
+			forecastList.innerHTML = forecastFor24; // Command to insert the created object into the html
 
 			showForecast(); // Call the function to show the forecast
 		}
@@ -284,12 +285,12 @@ window.addEventListener('load', () => {
 		// Here we lookup the forecast HTML element and gather the data package for it
 		// For loop is used to look up next 24h with a 3h interval and inserting it to the html
 		function createForecast72Info(forecastData) {
-			let forecastList = document.querySelector('#forecastList');
-			let weatherList =
+			let forecastFor72 =
 				'<ul> <h3> Forecast from the next 24h to 72h </h3> ';
+
 			// For loop for the weather information between 6h intervals
 			for (i = 7; i <= 24; i += 2) {
-				weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
+				forecastFor72 += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
 					forecastData.list[i].weather[0].icon
 				}@4x.png" alt="${
 					forecastData.list[i].weather[0].description
@@ -307,9 +308,9 @@ window.addEventListener('load', () => {
 				)} m/s from ${degToCompass(forecastData.list[i].wind.deg)}</div>
 			  </li>`;
 			}
-			weatherList += '</ul>';
+			forecastFor72 += '</ul>';
 
-			forecastList.innerHTML = weatherList; // Command to insert the created object into the html
+			forecastList.innerHTML = forecastFor72; // Command to insert the created object into the html
 
 			showForecast(); // Call the function to show the forecast
 		}
