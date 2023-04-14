@@ -14,11 +14,15 @@ window.addEventListener('load', () => {
 	let pLocation = document.querySelector('#location p');
 	let check24 = document.querySelector('#check24');
 	let check72 = document.querySelector('#check72');
+	let forecast24 = false;
+	let forecast72 = false;
+	let latitude = '';
+	let longitude = '';
 
-	// Eventlisteners for the "Current location"- and "Submit"- buttons
-
+	// Event listener for the current location finder
 	weatherForCurrentLocation.addEventListener('click', geoFindMe);
 
+	// Event listener for the form submit
 	input.addEventListener('submit', (e) => {
 		e.preventDefault();
 		let city = e.target.elements.city.value;
@@ -32,24 +36,27 @@ window.addEventListener('load', () => {
 		}
 	});
 
-	// Function geoFindme for looking up the location of the browser and storing the latitude and longitude values for later use.
+	// Event listeners for the forecast buttons
+	check24.addEventListener('click', (e) => {
+		checkForecast(latitude, longitude);
+		forecast24 = true;
+		forecast72 = false;
+	});
+	check72.addEventListener('click', (e) => {
+		checkForecast(latitude, longitude);
+		forecast72 = true;
+		forecast24 = false;
+	});
 
-	async function geoFindMe() {
+	// Function geoFindme for looking up the location of the browser and storing the latitude and longitude values for later use.
+	function geoFindMe() {
 		function success(position) {
-			const latitude = position.coords.latitude;
-			const longitude = position.coords.longitude;
+			latitude = position.coords.latitude;
+			longitude = position.coords.longitude;
 			pLocation.innerHTML = `Latitude: ${latitude}° <br> Longitude: ${longitude} °`;
 			checkCurrentWeather(latitude, longitude); // As a default checking the current weather with the coordinates from current location right away
 			clearForecast(); // Clearing forecast of any old locations
 			hideForecast(); // Hiding forecast, as a default showing only current weather
-
-			// Adding event listeners for the forecast buttons
-			check24.addEventListener('click', (e) => {
-				checkWeather24(latitude, longitude);
-			});
-			check72.addEventListener('click', (e) => {
-				checkWeather72(latitude, longitude);
-			});
 		}
 		// Default error message, if-else conditional with a timeout for the position lookup
 		function error() {
@@ -68,7 +75,7 @@ window.addEventListener('load', () => {
 	}
 
 	// checkLocation function to check a city from user input
-	async function checkLocation(city) {
+	function checkLocation(city) {
 		let locationData = {};
 		let locationRequest = new XMLHttpRequest();
 		// Initializing the AJAX Call to check the coordinates of a city that user has searched for
@@ -108,40 +115,29 @@ window.addEventListener('load', () => {
 		// Function getLocationInfo to get the coordinates for the user input city
 		// Latitude and longitude values are found in the JSON response
 		// They are stored in variables lat and lon
-		async function getLocationInfo() {
-			const lat = locationData[0].lat;
-			const lon = locationData[0].lon;
+		function getLocationInfo() {
+			latitude = locationData[0].lat;
+			longitude = locationData[0].lon;
 
-			const str = ` Latitude: ${lat} ° <br> Longitude: ${lon} °`; // Here we print out the location coordinates to the app location section
+			const str = ` Latitude: ${latitude} ° <br> Longitude: ${longitude} °`; // Here we print out the location coordinates to the app location section
 
 			pLocation.innerHTML = str;
-			checkCurrentWeather(lat, lon); // Search for current location's current weather
+			checkCurrentWeather(latitude, longitude); // Search for current location's current weather
 			clearForecast(); // Clear forecast from any old info
 			hideForecast(); // Hide forecast as a default
-
-			// Adding event listeners for the forecast buttons
-			check24.addEventListener('click', (e) => {
-				checkWeather24(lat, lon);
-			});
-			check72.addEventListener('click', (e) => {
-				checkWeather72(lat, lon);
-			});
 		}
 	}
 
 	// Function checkCurrentWeather to search for the current weather via an AJAX CALL from openweathermap API
-	// Here we pass in the lat, lon values from either the geoFindMe or the checkLocation function
-	async function checkCurrentWeather(lat, lon) {
-		let nWeather = document.querySelector('#cityName'); // Place for storing the weather station name to the html document
-		let pWeather = document.querySelector('#weatherData'); // Place for storing the weather info
-		let iWeather = document.querySelector('#weatherIcon'); // Place for the weather icon
-		let tWeather = document.querySelector('#temp'); // Place for the current temp beside the icon
+	// Here we pass in the latitude and longitude values from either the geoFindMe or the checkLocation function
+	function checkCurrentWeather(latitude, longitude) {
+		let pWeather = document.querySelector('#weatherData'); // Place for storing the weather info from loading to ready state
 		let currentWeatherData = {};
 		let weatherRequest = new XMLHttpRequest();
 		// Initializing the AJAX Call for the current weather, API URL, API KEY, latitude, longitude, units are taken from variables
 		weatherRequest.open(
 			'GET',
-			`${weatherApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
+			`${weatherApiUrl}lat=${latitude}&lon=${longitude}&units=${units}&appid=${API_KEY}&units=${units}`
 		);
 		weatherRequest.responseType = 'text';
 
@@ -154,13 +150,7 @@ window.addEventListener('load', () => {
 						weatherRequest.responseText
 					);
 					// Storing the data and sending it to the function createCurrentWeatherInfo
-					createCurrentWeatherInfo(
-						currentWeatherData,
-						pWeather,
-						nWeather,
-						iWeather,
-						tWeather
-					);
+					createCurrentWeatherInfo(currentWeatherData, pWeather);
 				} else {
 					// If something goes wrong then show error in the pWeather location
 					pWeather.textContent = 'error: ' + weatherRequest.status;
@@ -172,13 +162,10 @@ window.addEventListener('load', () => {
 		weatherRequest.send();
 
 		// Function for creating the information to the html page, temp, wind, sunrise, sunset etc passed on and showed on the page.
-		async function createCurrentWeatherInfo(
-			currentWeatherData,
-			pWeather,
-			nWeather,
-			iWeather,
-			tWeather
-		) {
+		function createCurrentWeatherInfo(currentWeatherData, pWeather) {
+			let nWeather = document.querySelector('#cityName'); // Place for storing the weather station name to the html document
+			let iWeather = document.querySelector('#weatherIcon'); // Place for the weather icon
+			let tWeather = document.querySelector('#temp'); // Place for the current temp beside the icon
 			// Declaring variables for weather info and using function to format time as wanted and wind direction degree to compass directions
 			// First the timeFormat constant for formatting the time for the weather
 			const timeFormat = (date) =>
@@ -226,138 +213,108 @@ window.addEventListener('load', () => {
 			pWeather.innerHTML = str;
 		}
 	}
-	// Function checkWeather constructs the weather forecast for the next 24 hours
-	// First the AJAX Call to the API for the information
-	// In this one the openweathermap forecast api is used
-	async function checkWeather24(lat, lon) {
-		let weather24Data = {};
-		let weather24Request = new XMLHttpRequest();
+	// Function checkForecast does the AJAX Call to the API for the forecast information
+	// Inside this function we check if user pressed 24h or 24-72h option for the forecast
+	function checkForecast(latitude, longitude) {
+		let forecastData = {};
+		let forecastRequest = new XMLHttpRequest();
 		// Initializing the AJAX Call
-		weather24Request.open(
+		forecastRequest.open(
 			'GET',
-			`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
+			`${forecastApiUrl}lat=${latitude}&lon=${longitude}&units=${units}&appid=${API_KEY}&units=${units}`
 		);
-		weather24Request.responseType = 'text';
+		forecastRequest.responseType = 'text';
 
-		weather24Request.addEventListener(
+		forecastRequest.addEventListener(
 			'load',
 			function () {
-				if (weather24Request.status === 200) {
-					weather24Data = JSON.parse(weather24Request.responseText);
-					createWeather24Info(weather24Data);
+				if (forecastRequest.status === 200) {
+					forecastData = JSON.parse(forecastRequest.responseText);
+					if (forecast24 == true) {
+						createForecast24Info(forecastData); // Here the next 24h version of forecast is deployed by calling the createForecast24info function
+					}
+					if (forecast72 == true) {
+						createForecast72Info(forecastData); // Here the 24-72h version of forecast is deployed createForecast72info function
+					}
 				} else {
-					console.log(weather24Request.status);
+					console.log(forecastRequest.status);
 				}
 			},
 			false
 		);
 		// Storing the response
-		weather24Request.send();
+		forecastRequest.send();
+
 		// Function to construct the 24 hour forecast
-		// Time formatting first
-		async function createWeather24Info(weather24Data) {
-			const timeFormat = (date) =>
-				date.toLocaleString('en-gb', {
-					month: 'short',
-					day: '2-digit',
-					hour: '2-digit',
-					minute: '2-digit',
-				});
-			//  Here we lookup the forecast element and gather the data package for it
-			// For loop is used to look up next 24h with a 3h interval and inserting it to the html
+		//  Here we lookup the forecast element and gather the data package for it
+		// For loop is used to look up next 24h with a 3h interval and inserting it to the HTML element
+
+		function createForecast24Info(forecastData) {
 			let forecastList = document.querySelector('#forecastList');
 			let weatherList = '<ul> <h3> Forecast for the next 24h</h3>';
 
 			// For loop for the weather information between 3h intervals
 			for (i = 0; i <= 8; i++) {
 				weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
-					weather24Data.list[i].weather[0].icon
+					forecastData.list[i].weather[0].icon
 				}@4x.png" alt="${
-					weather24Data.list[i].weather[0].description
-				}" height="40px"></div>${timeFormat(
-					new Date(weather24Data.list[i].dt * 1000)
-				)} Temperature: ${weather24Data.list[i].main.temp.toFixed(
-					0
-				)} °C <br> Wind: ${weather24Data.list[i].wind.speed.toFixed(
-					0
-				)} m/s from ${degToCompass(
-					weather24Data.list[i].wind.deg
-				)}</div>
-			  </li>`;
-			}
-			weatherList += '</ul>';
-			// Command to insert the created object into the html
-			forecastList.innerHTML = weatherList;
-			// Call the function to show the forecast
-			showForecast();
-		}
-	}
-	// Function checkWeather constructs the weather forecast for the hours between the hour from 24 to 72 hour
-	// First the AJAX Call to the API for the information
-	// In this one the openweathermap forecast api is used
-	async function checkWeather72(lat, lon) {
-		let weather72Data = {};
-		let weather72Request = new XMLHttpRequest();
-		// Initializing the AJAX Call
-		weather72Request.open(
-			'GET',
-			`${forecastApiUrl}lat=${lat}&lon=${lon}&units=${units}&appid=${API_KEY}&units=${units}`
-		);
-		weather72Request.responseType = 'text';
-
-		weather72Request.addEventListener(
-			'load',
-			function () {
-				if (weather72Request.status === 200) {
-					weather72Data = JSON.parse(weather72Request.responseText);
-					createWeather72Info(weather72Data);
-				} else {
-					console.log(weather72Request.status);
-				}
-			},
-			false
-		);
-		// Storing the response
-		weather72Request.send();
-		// Function to construct the 24-72 hour forecast
-		// Time formatting first
-		async function createWeather72Info(weather72Data) {
-			const timeFormat = (date) =>
-				date.toLocaleString('en-gb', {
+					forecastData.list[i].weather[0].description
+				}" height="40px"></div>${new Date(
+					forecastData.list[i].dt * 1000
+				).toLocaleString('en-gb', {
 					month: 'short',
 					day: '2-digit',
 					hour: '2-digit',
 					minute: '2-digit',
-				});
-			//  Here we lookup the forecast element and gather the data package for it
-			// For loop is used to look up next 24h with a 3h interval and inserting it to the html
+				})} Temperature: ${forecastData.list[i].main.temp.toFixed(
+					0
+				)} °C <br> Wind: ${forecastData.list[i].wind.speed.toFixed(
+					0
+				)} m/s from ${degToCompass(forecastData.list[i].wind.deg)}</div>
+			  </li>`;
+			}
+			weatherList += '</ul>';
+
+			forecastList.innerHTML = weatherList; // Command to insert the created object into the html
+
+			showForecast(); // Call the function to show the forecast
+		}
+
+		// This function constructs the weather forecast for the hours between the hour from 24 to 72 hour
+		// Here we lookup the forecast HTML element and gather the data package for it
+		// For loop is used to look up next 24h with a 3h interval and inserting it to the html
+		function createForecast72Info(forecastData) {
 			let forecastList = document.querySelector('#forecastList');
 			let weatherList =
 				'<ul> <h3> Forecast from the next 24h to 72h </h3> ';
 			// For loop for the weather information between 6h intervals
 			for (i = 7; i <= 24; i += 2) {
 				weatherList += ` <li> <div><div class="forecastImg"> <img src="https://openweathermap.org/img/wn/${
-					weather72Data.list[i].weather[0].icon
+					forecastData.list[i].weather[0].icon
 				}@4x.png" alt="${
-					weather72Data.list[i].weather[0].description
-				}" height="40px"></div>${timeFormat(
-					new Date(weather72Data.list[i].dt * 1000)
-				)} Temperature: ${weather72Data.list[i].main.temp.toFixed(
+					forecastData.list[i].weather[0].description
+				}" height="40px"></div>${new Date(
+					forecastData.list[i].dt * 1000
+				).toLocaleString('en-gb', {
+					month: 'short',
+					day: '2-digit',
+					hour: '2-digit',
+					minute: '2-digit',
+				})} Temperature: ${forecastData.list[i].main.temp.toFixed(
 					0
-				)} °C  <br> Wind: ${weather72Data.list[i].wind.speed.toFixed(
+				)} °C  <br> Wind: ${forecastData.list[i].wind.speed.toFixed(
 					0
-				)} m/s from ${degToCompass(
-					weather72Data.list[i].wind.deg
-				)}</div>
+				)} m/s from ${degToCompass(forecastData.list[i].wind.deg)}</div>
 			  </li>`;
 			}
 			weatherList += '</ul>';
-			// Command to insert the created object into the html
-			forecastList.innerHTML = weatherList;
-			// Call the function to show the forecast
-			showForecast();
+
+			forecastList.innerHTML = weatherList; // Command to insert the created object into the html
+
+			showForecast(); // Call the function to show the forecast
 		}
 	}
+
 	// Function for converting degree values to compass directions
 	function degToCompass(num) {
 		var val = Math.floor(num / 22.5 + 0.5);
