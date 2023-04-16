@@ -12,13 +12,13 @@ window.addEventListener('load', () => {
 	let cityInput = document.querySelector('#city');
 	let weatherForCurrentLocation = document.querySelector('#currentLocation');
 	let pLocation = document.querySelector('#location p');
+	let latitude = '';
+	let longitude = '';
 	let forecastList = document.querySelector('#forecastList');
 	let check24 = document.querySelector('#check24');
 	let check72 = document.querySelector('#check72');
 	let forecast24 = false;
 	let forecast72 = false;
-	let latitude = '';
-	let longitude = '';
 
 	// Event listener for the current location finder
 	weatherForCurrentLocation.addEventListener('click', geoFindMe);
